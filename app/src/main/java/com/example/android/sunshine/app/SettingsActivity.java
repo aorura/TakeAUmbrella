@@ -45,6 +45,8 @@ public class SettingsActivity extends PreferenceActivity
         // updated when the preference changes.
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_units_key)));
+        // dongwook2.shin
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_rainbow_key)));
     }
 
     /**

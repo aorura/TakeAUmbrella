@@ -31,11 +31,18 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 
     private boolean mTwoPane;
     private String mLocation;
+    //dongwook2.shin
+    private String mWeather;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mLocation = Utility.getPreferredLocation(this);
+        mWeather = Utility.getPreferredRainbow(this);
+        // Toast.makeText(getBaseContext(), mWeather, Toast.LENGTH_LONG).show();
+
+
 
         setContentView(R.layout.activity_main);
         if (findViewById(R.id.weather_detail_container) != null) {
@@ -90,6 +97,8 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
     protected void onResume() {
         super.onResume();
         String location = Utility.getPreferredLocation( this );
+        mWeather = Utility.getPreferredRainbow(this);
+
         // update the location in our second pane using the fragment manager
             if (location != null && !location.equals(mLocation)) {
             ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);

@@ -10,4 +10,11 @@
         <item>@string/pref_units_metric</item>
         <item>@string/pref_units_imperial</item>
     </string-array>
+
+
+    <string-array name="pref_rainbow">
+        <item>@string/pref_rainbow_sunny</item>
+        <item>@string/pref_rainbow_rainy</item>
+        <item>@string/pref_rainbow_cloud</item>
+    </string-array>
 </resources>
