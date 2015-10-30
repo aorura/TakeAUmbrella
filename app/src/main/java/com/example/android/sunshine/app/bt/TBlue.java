@@ -1,4 +1,4 @@
-package net.aeracoop.flone.remote;
+package com.example.android.sunshine.app.bt;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -41,7 +41,7 @@ public class TBlue {
         localAdapter = BluetoothAdapter.getDefaultAdapter();
         if (!localAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            this.floneRemote.startActivityForResult(enableBtIntent, FloneRemote.REQUEST_ENABLE_BT);
+            this.floneRemote.startActivityForResult(enableBtIntent, ComBlueTooth.REQUEST_ENABLE_BT);
         } else {
             connect();
         }
@@ -55,7 +55,7 @@ public class TBlue {
             Log.i(TAG, "Bluetooth adapter found and enabled on phone. ");
         } else {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            this.floneRemote.startActivityForResult(enableBtIntent, FloneRemote.REQUEST_ENABLE_BT);
+            this.floneRemote.startActivityForResult(enableBtIntent, ComBlueTooth.REQUEST_ENABLE_BT);
             Log.e(TAG, "Bluetooth adapter NOT FOUND or NOT ENABLED!");
             return;
         }

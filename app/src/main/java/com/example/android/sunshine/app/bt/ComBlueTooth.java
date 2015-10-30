@@ -1,4 +1,4 @@
-package net.aeracoop.flone.remote;
+package com.example.android.sunshine.app.bt;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -8,21 +8,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import processing.test.floneremote.R;
+import com.example.android.sunshine.app.R;
 
 public class ComBlueTooth extends Activity {
+    final static int REQUEST_ENABLE_BT = 1;
     static TBlue tBlue;
     EditText blueName;
     TextView textView;
-    long lastPress=0;
+    long lastPress = 0;
     static String bluetoothId = "HB02";
     byte[] LED_COLOR = new byte[5];
     int idx = 0;
@@ -93,7 +91,7 @@ public class ComBlueTooth extends Activity {
     }
 
     public void onStop() {
-        if (tBlue!= null)
+        if (tBlue != null)
             tBlue.close();
         super.onStop();
     }
@@ -105,8 +103,7 @@ public class ComBlueTooth extends Activity {
 
         try {
             tBlue.connect();
-        }
-        catch (NullPointerException ex) {
+        } catch (NullPointerException ex) {
             Toast.makeText(this, "Warning: Flone not connected", Toast.LENGTH_SHORT).show();
         }
     }
@@ -159,8 +156,7 @@ public class ComBlueTooth extends Activity {
         boolean btConnected = false;
         try {
             btConnected = tBlue.streaming();
-        }
-        catch(Exception ex) {
+        } catch (Exception ex) {
             btConnected = false;
         }
         return btConnected;
@@ -171,17 +167,15 @@ public class ComBlueTooth extends Activity {
             if (!tBlue.streaming()) {
                 tBlue.connect();
             }
-        }
-        catch (NullPointerException ex) {
+        } catch (NullPointerException ex) {
             Toast.makeText(this, "Bluetooth Warning: Can not connect", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void onActivityResult (int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             tBlue.connect();
-        }
-        else {
+        } else {
             Toast.makeText(this, "No se ha activado el bluetooth", Toast.LENGTH_SHORT).show();
         }
     }
@@ -190,10 +184,10 @@ public class ComBlueTooth extends Activity {
     public void onBackPressed() {
         System.out.println("back");
         long currentTime = System.currentTimeMillis();
-        if(currentTime - lastPress > 5000){
+        if (currentTime - lastPress > 5000) {
             Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_LONG).show();
             lastPress = currentTime;
-        }else{
+        } else {
             super.onBackPressed();
         }
     }

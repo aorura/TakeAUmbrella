@@ -102,4 +102,11 @@
     <string name="pref_rainbow_key">Rainbow</string>
     <string name="pref_rainbow_default">Sunny</string>
 
+    <string name="title_activity_com_blue_tooth">ComBlueTooth</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="connect">"connect"</string>
+    <string name="blue_tooth">"HB02"</string>
+    <string name="send">"send"</string>
+    <string name="read">"read"</string>
+
 </resources>
