@@ -75,8 +75,6 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         this.getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // end of move
 
-
-
         setContentView(R.layout.activity_main);
         if (findViewById(R.id.weather_detail_container) != null) {
             // The detail container view will be present only in the large-screen layouts
@@ -101,6 +99,10 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         forecastFragment.setUseTodayLayout(!mTwoPane);
 
         SunshineSyncAdapter.initializeSyncAdapter(this);
+
+
+        //dongwook2.shin
+        onSend(mWeather);
 
 
 
@@ -236,15 +238,17 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
     }
 
 
-    public void onSend(View view) {
+    public void onSend(String cmd) {
         if (btConnected()) {
             Toast.makeText(this, "isConnect == true", Toast.LENGTH_SHORT).show();
             byte[] command = new byte[2];
+
             command[0] = 0x16;
             command[1] = LED_COLOR[idx++];
             if (idx % 5 == 0) {
                 idx = 0;
             }
+
             tBlue.write(command);
         } else {
             Toast.makeText(this, "isConnect == false", Toast.LENGTH_SHORT).show();
