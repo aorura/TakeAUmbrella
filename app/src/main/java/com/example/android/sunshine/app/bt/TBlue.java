@@ -1,12 +1,10 @@
-package com.example.android.sunshine.app.bt;
+package net.aeracoop.flone.remote;
 
-/**
- * Created by dongwook2.shin on 2015-10-30.
- */
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -34,8 +32,6 @@ public class TBlue {
     public BluetoothSocket socket = null;
     public OutputStream outStream = null;
     public InputStream inStream = null;
-
-    static String bluetoothId = "HB02";
 
     private byte[] inBuffer = new byte[32];
     private int bytesRead = 0;
@@ -68,7 +64,7 @@ public class TBlue {
 
     public void connect() {
         for (BluetoothDevice dp : localAdapter.getBondedDevices()) {
-            if (dp.getName().equals(TBlue.bluetoothId))//floneId
+            if (dp.getName().equals(ComBlueTooth.bluetoothId))//floneId
                 this.address = dp.getAddress();
         }
         Log.i(TAG, "Bluetooth connecting to " + address + "...");
@@ -163,19 +159,19 @@ public class TBlue {
     }
 
 
-  /*public String readString()
+  /*public String readString() 
   {
-    if (!streaming()) return "";
+    if (!streaming()) return ""; 
     String inStr="";
     try {
       if (0<inStream.available()) {
         byte[] inBuffer = new byte[1024];
         int bytesRead = inStream.read(inBuffer);
         inStr = new String(inBuffer, "ASCII");
-        inStr=inStr.substring(0, bytesRead);
+        inStr=inStr.substring(0, bytesRead); 
         Log.i(TAG, "byteCount: "+bytesRead+ ", inStr: "+inStr);
       }
-    }
+    } 
     catch (IOException e) {
       Log.e(TAG, "Read failed", e);
     }
