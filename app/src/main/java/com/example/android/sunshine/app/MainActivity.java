@@ -32,6 +32,9 @@ import android.widget.Toast;
 import com.example.android.sunshine.app.bt.TBlue;
 import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class MainActivity extends ActionBarActivity implements ForecastFragment.Callback {
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -48,8 +51,6 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
     byte[] LED_COLOR = new byte[5];
     int idx = 0;
     // end of move
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,11 +103,17 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 
 
         //dongwook2.shin
-        onSend(mWeather);
-
-
-
-
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        onSend(mWeather);
+                    }
+                });
+            }
+        }, 2000);
     }
 
     @Override
@@ -237,28 +244,17 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         }
     }
 
-
     public void onSend(String cmd) {
         if (btConnected()) {
             Toast.makeText(this, "isConnect == true", Toast.LENGTH_SHORT).show();
-            byte[] command = new byte[2];
-
-            command[0] = 0x16;
-            command[1] = LED_COLOR[idx++];
-            if (idx % 5 == 0) {
-                idx = 0;
-            }
+            byte[] command = new byte[5];
+            command[0] = 0x08;  // LED Color Command
+            command[1] = 0x01; //LED_COLOR[idx++];
+            command[2] = 0x04; // 0x02 = celcius, 0x04 = feran
+            command[3] = 0x01; // second_digit
+            command[4] = 0x09; // first_digit
 
             tBlue.write(command);
-        } else {
-            Toast.makeText(this, "isConnect == false", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void onRead(View view) {
-        if (btConnected()) {
-            Toast.makeText(this, "isConnect == true", Toast.LENGTH_SHORT).show();
-            //textView.setText(tBlue.read());
         } else {
             Toast.makeText(this, "isConnect == false", Toast.LENGTH_SHORT).show();
         }
@@ -274,6 +270,5 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         }
         return btConnected;
     }
-
     // end of move
 }
