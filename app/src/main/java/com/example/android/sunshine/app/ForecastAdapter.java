@@ -22,6 +22,11 @@ public class ForecastAdapter extends CursorAdapter {
     // Flag to determine if we want to use a separate view for "today".
     private boolean mUseTodayLayout = true;
 
+    //dongwook2.shin  for min temperature and weather state
+
+    public static double TEMP;
+    public static int WEATHER;
+
     /**
      * Cache of the children views for a forecast list item.
      */
@@ -80,6 +85,8 @@ public class ForecastAdapter extends CursorAdapter {
                 // Get weather icon
                 viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(
                         cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
+                ForecastAdapter.TEMP = cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
+                ForecastAdapter.WEATHER = cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
                 break;
             }
             case VIEW_TYPE_FUTURE_DAY: {

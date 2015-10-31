@@ -95,12 +95,12 @@
     <string name="pref_last_notification">last_notification</string>
 
     <!-- dongwook2.shin: String related to Bluetooth -->
-    <string name="rainbow">Temp</string>
+    <string name="rainbow">LED</string>
     <string name="pref_rainbow_sunny">Sunny</string>
     <string name="pref_rainbow_rainy">Rainy</string>
     <string name="pref_rainbow_cloud">Cloud</string>
     <string name="pref_rainbow_key">Rainbow</string>
-    <string name="pref_rainbow_default">Sunny</string>
+    <string name="pref_rainbow_default">None</string>
 
     <string name="title_activity_com_blue_tooth">ComBlueTooth</string>
     <string name="hello_world">Hello world!</string>

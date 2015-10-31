@@ -13,6 +13,7 @@
 
 
     <string-array name="pref_rainbow">
+        <item>@string/pref_rainbow_default</item>
         <item>@string/pref_rainbow_sunny</item>
         <item>@string/pref_rainbow_rainy</item>
         <item>@string/pref_rainbow_cloud</item>

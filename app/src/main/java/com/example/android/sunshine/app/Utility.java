@@ -26,6 +26,16 @@ import java.util.Date;
 
 public class Utility {
 
+    //dongwook2.shin for BT LED
+    public static final int THUNDERSTORM = 200;
+    public static final int DRIZZLE = 300;
+    public static final int RAIN = 500;
+    public static final int SNOW = 600;
+    public static final int ATMOSPHERE = 700;
+    public static final int CLOUDS = 800;
+    public static final int CLEAR = 801;
+
+
     public static String getPreferredRainbow(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getString(context.getString(R.string.pref_rainbow_key),
@@ -249,6 +259,36 @@ public class Utility {
             return R.drawable.art_light_clouds;
         } else if (weatherId >= 802 && weatherId <= 804) {
             return R.drawable.art_clouds;
+        }
+        return -1;
+    }
+
+    //dongwook2.shin for BT LED
+    public static int getWeatherConditionForBT(int weatherId) {
+        // Based on weather code data found at:
+        // http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes
+        if (weatherId >= 200 && weatherId <= 232) {
+            return Utility.THUNDERSTORM;
+        } else if (weatherId >= 300 && weatherId <= 321) {
+            return Utility.DRIZZLE;
+        } else if (weatherId >= 500 && weatherId <= 504) {
+            return Utility.RAIN;
+        } else if (weatherId == 511) {
+            return Utility.SNOW;
+        } else if (weatherId >= 520 && weatherId <= 531) {
+            return Utility.RAIN;
+        } else if (weatherId >= 600 && weatherId <= 622) {
+            return Utility.SNOW;
+        } else if (weatherId >= 701 && weatherId <= 761) {
+            return Utility.ATMOSPHERE;
+        } else if (weatherId == 761 || weatherId == 781) {
+            return Utility.THUNDERSTORM;
+        } else if (weatherId == 800) {
+            return Utility.CLEAR;
+        } else if (weatherId == 801) {
+            return Utility.CLOUDS;
+        } else if (weatherId >= 802 && weatherId <= 804) {
+            return Utility.CLOUDS;
         }
         return -1;
     }

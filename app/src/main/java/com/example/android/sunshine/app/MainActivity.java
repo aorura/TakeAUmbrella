@@ -109,7 +109,10 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        onSend(mWeather);
+                        onSend(Utility.getWeatherConditionForBT(ForecastAdapter.WEATHER));
+                      Toast.makeText(getBaseContext(), ""+Utility.getWeatherConditionForBT(ForecastAdapter.WEATHER), Toast.LENGTH_LONG).show();
+                      //Toast.makeText(getBaseContext(), ""+ForecastAdapter.WEATHER, Toast.LENGTH_LONG).show();
+
                     }
                 });
             }
@@ -143,7 +146,8 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
     protected void onResume() {
         super.onResume();
         String location = Utility.getPreferredLocation( this );
-        mWeather = Utility.getPreferredRainbow(this);
+        String weather = Utility.getPreferredRainbow(this);
+
 
         // update the location in our second pane using the fragment manager
             if (location != null && !location.equals(mLocation)) {
@@ -156,6 +160,22 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
                 df.onLocationChanged(location);
             }
             mLocation = location;
+        }
+
+
+        // change LED light when weather value is chagend
+        if( weather !=null && weather != getString(R.string.pref_rainbow_default) && !weather.equals(mWeather)) {
+            if(weather.equals(getString(R.string.pref_rainbow_sunny))) {
+                onSend(Utility.CLEAR);
+            } else if(weather.equals(getString(R.string.pref_rainbow_cloud))) {
+                onSend(Utility.CLOUDS);
+            } else if(weather.equals(getString(R.string.pref_rainbow_rainy))) {
+                //settings menu can be added. so I used else if statement.
+                onSend(Utility.RAIN);
+            }
+            //onSend(weather);
+            Toast.makeText(getBaseContext(), weather, Toast.LENGTH_LONG).show();
+
         }
     }
 
@@ -244,9 +264,37 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         }
     }
 
-    public void onSend(String cmd) {
+    public void onSend(int WeatherId) {
         if (btConnected()) {
             Toast.makeText(this, "isConnect == true", Toast.LENGTH_SHORT).show();
+
+            switch (WeatherId) {
+                case Utility.THUNDERSTORM:
+                    //TODO
+                    break;
+                case Utility.DRIZZLE:
+                    //TODO
+                    break;
+                case Utility.RAIN:
+                    //TODO
+                    break;
+                case Utility.SNOW:
+                    //TODO
+                    break;
+                case Utility.ATMOSPHERE:
+                    //TODO
+                    break;
+                case Utility.CLOUDS:
+                    //TODO
+                    break;
+                case Utility.CLEAR:
+                    //TODO
+                    break;
+                default:
+                    //TODO
+                    break;
+            }
+
             byte[] command = new byte[5];
             command[0] = 0x08;  // LED Color Command
             command[1] = 0x01; //LED_COLOR[idx++];

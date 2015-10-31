@@ -25,7 +25,7 @@
         android:title="@string/pref_enable_notifications_label" />
 
     <ListPreference
-        android:defaultValue="@string/pref_rainbow_sunny"
+        android:defaultValue="@string/pref_rainbow_default"
         android:entries="@array/pref_rainbow"
         android:entryValues="@array/pref_rainbow"
         android:key="@string/pref_rainbow_key"
