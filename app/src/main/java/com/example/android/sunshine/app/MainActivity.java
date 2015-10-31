@@ -112,7 +112,6 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
                         onSend(Utility.getWeatherConditionForBT(ForecastAdapter.WEATHER));
                         Toast.makeText(getBaseContext(), "" + Utility.getWeatherConditionForBT(ForecastAdapter.WEATHER), Toast.LENGTH_LONG).show();
                         //Toast.makeText(getBaseContext(), ""+ForecastAdapter.WEATHER, Toast.LENGTH_LONG).show();
-
                     }
                 });
             }
