@@ -268,36 +268,37 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         if (btConnected()) {
             Toast.makeText(this, "isConnect == true", Toast.LENGTH_SHORT).show();
 
+            byte[] command = new byte[5];
+
             switch (WeatherId) {
                 case Utility.THUNDERSTORM:
-                    //TODO
+                    command[1] = 0x01; //blue
                     break;
                 case Utility.DRIZZLE:
-                    //TODO
+                    command[1] = 0x08; //yellow
                     break;
                 case Utility.RAIN:
-                    //TODO
+                    command[1] = 0x01; //blue
                     break;
                 case Utility.SNOW:
-                    //TODO
+                    command[1] = 0x10; //WHITE
                     break;
                 case Utility.ATMOSPHERE:
-                    //TODO
+                    command[1] = 0x08; //yellow
                     break;
                 case Utility.CLOUDS:
-                    //TODO
+                    command[1] = 0x02; //green
                     break;
                 case Utility.CLEAR:
-                    //TODO
+                    command[1] = 0x04; //RED
                     break;
                 default:
                     //TODO
                     break;
             }
 
-            byte[] command = new byte[5];
             command[0] = 0x08;  // LED Color Command
-            command[1] = 0x01; //LED_COLOR[idx++];
+            //command[1] = 0x01; //LED_COLOR[idx++];
             command[2] = 0x04; // 0x02 = celcius, 0x04 = feran
             command[3] = 0x01; // second_digit
             command[4] = 0x09; // first_digit

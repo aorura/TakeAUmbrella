@@ -85,7 +85,7 @@ public class ForecastAdapter extends CursorAdapter {
                 // Get weather icon
                 viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(
                         cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
-                ForecastAdapter.TEMP = cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
+                ForecastAdapter.TEMP = cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP);
                 ForecastAdapter.WEATHER = cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
                 break;
             }
