@@ -95,7 +95,7 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
             getSupportActionBar().setElevation(0f);
         }
 
-        ForecastFragment forecastFragment =  ((ForecastFragment)getSupportFragmentManager()
+        ForecastFragment forecastFragment = ((ForecastFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_forecast));
         forecastFragment.setUseTodayLayout(!mTwoPane);
 
@@ -110,8 +110,8 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
                     @Override
                     public void run() {
                         onSend(Utility.getWeatherConditionForBT(ForecastAdapter.WEATHER));
-                      Toast.makeText(getBaseContext(), ""+Utility.getWeatherConditionForBT(ForecastAdapter.WEATHER), Toast.LENGTH_LONG).show();
-                      //Toast.makeText(getBaseContext(), ""+ForecastAdapter.WEATHER, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getBaseContext(), "" + Utility.getWeatherConditionForBT(ForecastAdapter.WEATHER), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getBaseContext(), ""+ForecastAdapter.WEATHER, Toast.LENGTH_LONG).show();
 
                     }
                 });
@@ -145,18 +145,18 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
     @Override
     protected void onResume() {
         super.onResume();
-        String location = Utility.getPreferredLocation( this );
+        String location = Utility.getPreferredLocation(this);
         String weather = Utility.getPreferredRainbow(this);
 
 
         // update the location in our second pane using the fragment manager
-            if (location != null && !location.equals(mLocation)) {
-            ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
-            if ( null != ff ) {
+        if (location != null && !location.equals(mLocation)) {
+            ForecastFragment ff = (ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
+            if (null != ff) {
                 ff.onLocationChanged();
             }
-            DetailFragment df = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
-            if ( null != df ) {
+            DetailFragment df = (DetailFragment) getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
+            if (null != df) {
                 df.onLocationChanged(location);
             }
             mLocation = location;
@@ -164,12 +164,12 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 
 
         // change LED light when weather value is chagend
-        if( weather !=null && weather != getString(R.string.pref_rainbow_default) && !weather.equals(mWeather)) {
-            if(weather.equals(getString(R.string.pref_rainbow_sunny))) {
+        if (weather != null && weather != getString(R.string.pref_rainbow_default) && !weather.equals(mWeather)) {
+            if (weather.equals(getString(R.string.pref_rainbow_sunny))) {
                 onSend(Utility.CLEAR);
-            } else if(weather.equals(getString(R.string.pref_rainbow_cloud))) {
+            } else if (weather.equals(getString(R.string.pref_rainbow_cloud))) {
                 onSend(Utility.CLOUDS);
-            } else if(weather.equals(getString(R.string.pref_rainbow_rainy))) {
+            } else if (weather.equals(getString(R.string.pref_rainbow_rainy))) {
                 //settings menu can be added. so I used else if statement.
                 onSend(Utility.RAIN);
             }
@@ -247,7 +247,7 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
     }
 
     public void onStop() {
-        if (tBlue!= null)
+        if (tBlue != null)
             tBlue.close();
         super.onStop();
     }
@@ -258,8 +258,7 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
             bluetoothId = blueName.getText().toString(); */
         try {
             tBlue.connect();
-        }
-        catch (NullPointerException ex) {
+        } catch (NullPointerException ex) {
             Toast.makeText(this, "Warning: Flone not connected", Toast.LENGTH_SHORT).show();
         }
     }
@@ -313,8 +312,7 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         boolean btConnected = false;
         try {
             btConnected = tBlue.streaming();
-        }
-        catch(Exception ex) {
+        } catch (Exception ex) {
             btConnected = false;
         }
         return btConnected;
