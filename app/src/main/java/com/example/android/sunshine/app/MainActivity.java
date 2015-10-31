@@ -109,9 +109,7 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        onSend(Utility.getWeatherConditionForBT(ForecastAdapter.WEATHER));
-                        Toast.makeText(getBaseContext(), "" + Utility.getWeatherConditionForBT(ForecastAdapter.WEATHER), Toast.LENGTH_LONG).show();
-                        //Toast.makeText(getBaseContext(), ""+ForecastAdapter.WEATHER, Toast.LENGTH_LONG).show();
+                        onSend(Utility.getWeatherConditionForBT(ForecastAdapter.WEATHER), ForecastAdapter.TEMP);
                     }
                 });
             }
@@ -161,20 +159,16 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
             mLocation = location;
         }
 
-
         // change LED light when weather value is chagend
         if (weather != null && weather != getString(R.string.pref_rainbow_default) && !weather.equals(mWeather)) {
             if (weather.equals(getString(R.string.pref_rainbow_sunny))) {
-                onSend(Utility.CLEAR);
+                onSend(Utility.CLEAR, ForecastAdapter.TEMP);
             } else if (weather.equals(getString(R.string.pref_rainbow_cloud))) {
-                onSend(Utility.CLOUDS);
+                onSend(Utility.CLOUDS, ForecastAdapter.TEMP);
             } else if (weather.equals(getString(R.string.pref_rainbow_rainy))) {
                 //settings menu can be added. so I used else if statement.
-                onSend(Utility.RAIN);
+                onSend(Utility.RAIN, ForecastAdapter.TEMP);
             }
-            //onSend(weather);
-            Toast.makeText(getBaseContext(), weather, Toast.LENGTH_LONG).show();
-
         }
     }
 
@@ -235,6 +229,9 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 
 
     public void onDestroy() {
+        if (tBlue != null) {
+            tBlue.close();
+        }
         this.unregisterReceiver(BTReceiver);
         super.onDestroy();
     }
@@ -246,8 +243,9 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
     }
 
     public void onStop() {
-        if (tBlue != null)
-            tBlue.close();
+        //
+        /*if (tBlue != null)
+            tBlue.close();*/
         super.onStop();
     }
 
@@ -262,11 +260,16 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         }
     }
 
-    public void onSend(int WeatherId) {
+    public void onSend(int WeatherId, double temp) {
         if (btConnected()) {
             Toast.makeText(this, "isConnect == true", Toast.LENGTH_SHORT).show();
 
             byte[] command = new byte[5];
+            int maxTemp = 0;
+            byte secondDigit = 0x00;
+            byte firstDigit = 0x00;
+            command[0] = 0x08;  // LED Color Command
+            command[2] = 0x04; // 0x02 = celcius, 0x04 = feran
 
             switch (WeatherId) {
                 case Utility.THUNDERSTORM:
@@ -291,16 +294,25 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
                     command[1] = 0x04; //RED
                     break;
                 default:
-                    //TODO
+                    command[1] = 0x10; //WHITE
                     break;
             }
 
-            command[0] = 0x08;  // LED Color Command
-            //command[1] = 0x01; //LED_COLOR[idx++];
-            command[2] = 0x04; // 0x02 = celcius, 0x04 = feran
-            command[3] = 0x01; // second_digit
-            command[4] = 0x09; // first_digit
-
+            maxTemp = (int)Math.round(temp);
+            if(maxTemp > 100) {
+                secondDigit = 0x09;
+                firstDigit = 0x09;
+            } else if ( maxTemp < 100 && maxTemp > 9) {
+                int a = maxTemp/10;
+                int b = maxTemp - (10*a);
+                firstDigit =  Utility.getDigit(a);
+                secondDigit = Utility.getDigit(b);
+            } else if(maxTemp < 10 && maxTemp > 0) {
+                firstDigit = 0x00;
+                secondDigit = Utility.getDigit(maxTemp);
+            }
+            command[3] = secondDigit; // second_digit
+            command[4] = firstDigit; // first_digit
             tBlue.write(command);
         } else {
             Toast.makeText(this, "isConnect == false", Toast.LENGTH_SHORT).show();
