@@ -24,6 +24,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -109,13 +110,13 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        onSend(Utility.getWeatherConditionForBT(ForecastAdapter.WEATHER));
+                        onSend(Utility.getWeatherConditionForBT(ForecastAdapter.WEATHER), ForecastAdapter.TEMP);
                         Toast.makeText(getBaseContext(), "" + Utility.getWeatherConditionForBT(ForecastAdapter.WEATHER), Toast.LENGTH_LONG).show();
                         //Toast.makeText(getBaseContext(), ""+ForecastAdapter.WEATHER, Toast.LENGTH_LONG).show();
                     }
                 });
             }
-        }, 2000);
+        }, 5000);
     }
 
     @Override
@@ -165,12 +166,12 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         // change LED light when weather value is chagend
         if (weather != null && weather != getString(R.string.pref_rainbow_default) && !weather.equals(mWeather)) {
             if (weather.equals(getString(R.string.pref_rainbow_sunny))) {
-                onSend(Utility.CLEAR);
+                onSend(Utility.CLEAR, ForecastAdapter.TEMP);
             } else if (weather.equals(getString(R.string.pref_rainbow_cloud))) {
-                onSend(Utility.CLOUDS);
+                onSend(Utility.CLOUDS, ForecastAdapter.TEMP);
             } else if (weather.equals(getString(R.string.pref_rainbow_rainy))) {
                 //settings menu can be added. so I used else if statement.
-                onSend(Utility.RAIN);
+                onSend(Utility.RAIN, ForecastAdapter.TEMP);
             }
             //onSend(weather);
             Toast.makeText(getBaseContext(), weather, Toast.LENGTH_LONG).show();
@@ -262,11 +263,13 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         }
     }
 
-    public void onSend(int WeatherId) {
+    public void onSend(int WeatherId, double temp) {
         if (btConnected()) {
             Toast.makeText(this, "isConnect == true", Toast.LENGTH_SHORT).show();
 
-            byte[] command = new byte[5];
+            byte[] command = new byte[6];
+
+            command[0] = 0x08;  // Weather Command
 
             switch (WeatherId) {
                 case Utility.THUNDERSTORM:
@@ -295,11 +298,30 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
                     break;
             }
 
-            command[0] = 0x08;  // LED Color Command
-            //command[1] = 0x01; //LED_COLOR[idx++];
-            command[2] = 0x04; // 0x02 = celcius, 0x04 = feran
-            command[3] = 0x01; // second_digit
-            command[4] = 0x09; // first_digit
+            // select a celcius or fahrenheit
+            if (Utility.isMetric(this)) {
+                command[2] = 0x04; // 0x04 = celcius, 0x02 = fahrenheit
+            } else {
+                command[2] = 0x02;
+            }
+
+            String strTemp = Utility.formatTemperatureWithoutDegree(this, temp);
+            Log.d("park", "strTemp: " + strTemp);
+            // command[3] : 10's digit number
+            // command[4] : 1's digit number
+            int length = strTemp.length();
+            if (length == 1) {
+                command[3] = 0x00;
+                command[4] = (byte) (strTemp.charAt(0) - 0x30);
+            } else if (length == 2) {
+                command[3] = (byte) (strTemp.charAt(0) - 0x30);
+                command[4] = (byte) (strTemp.charAt(1) - 0x30);
+            } else {
+                command[3] = 0x09;
+                command[4] = 0x09;
+            }
+
+            command[5] = 0x7F;  // Use this value to end the command.
 
             tBlue.write(command);
         } else {
