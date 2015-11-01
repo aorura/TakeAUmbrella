@@ -303,4 +303,34 @@ public class Utility {
         }
         return -1;
     }
+
+    public static byte getDigit (int num) {
+        if(num > 9) {
+            return 0x09;
+        }
+        switch (num) {
+            case 1:
+                return 0x01;
+            case 2:
+                return 0x02;
+            case 3:
+                return 0x03;
+            case 4:
+                return 0x04;
+            case 5:
+                return 0x05;
+            case 6:
+                return 0x06;
+            case 7:
+                return 0x07;
+            case 8:
+                return 0x08;
+            case 9:
+                return 0x09;
+            case 0:
+                return 0x00;
+        }
+        return 0x09;
+    }
+
 }

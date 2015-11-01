@@ -148,7 +148,6 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         String location = Utility.getPreferredLocation(this);
         String weather = Utility.getPreferredRainbow(this);
 
-
         // update the location in our second pane using the fragment manager
         if (location != null && !location.equals(mLocation)) {
             ForecastFragment ff = (ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
@@ -162,7 +161,6 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
             mLocation = location;
         }
 
-
         // change LED light when weather value is chagend
         if (weather != null && weather != getString(R.string.pref_rainbow_default) && !weather.equals(mWeather)) {
             if (weather.equals(getString(R.string.pref_rainbow_sunny))) {
@@ -173,9 +171,6 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
                 //settings menu can be added. so I used else if statement.
                 onSend(Utility.RAIN, ForecastAdapter.TEMP);
             }
-            //onSend(weather);
-            Toast.makeText(getBaseContext(), weather, Toast.LENGTH_LONG).show();
-
         }
     }
 
@@ -195,9 +190,10 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
                     .replace(R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
                     .commit();
         } else {
-            Intent intent = new Intent(this, DetailActivity.class)
-                    .setData(contentUri);
-            startActivity(intent);
+//            Intent intent = new Intent(this, DetailActivity.class)
+//                    .setData(contentUri);
+//            startActivity(intent);
+            onSend(Utility.getWeatherConditionForBT(ForecastAdapter.WEATHER), ForecastAdapter.TEMP);
         }
     }
 
@@ -236,6 +232,9 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 
 
     public void onDestroy() {
+        if (tBlue != null) {
+            tBlue.close();
+        }
         this.unregisterReceiver(BTReceiver);
         super.onDestroy();
     }
@@ -247,8 +246,9 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
     }
 
     public void onStop() {
-        if (tBlue != null)
-            tBlue.close();
+        //
+        /*if (tBlue != null)
+            tBlue.close();*/
         super.onStop();
     }
 
@@ -265,11 +265,14 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 
     public void onSend(int WeatherId, double temp) {
         if (btConnected()) {
-            Toast.makeText(this, "isConnect == true", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "onSend", Toast.LENGTH_SHORT).show();
 
             byte[] command = new byte[6];
-
             command[0] = 0x08;  // Weather Command
+
+            int maxTemp = 0;
+            byte secondDigit = 0x00;
+            byte firstDigit = 0x00;
 
             switch (WeatherId) {
                 case Utility.THUNDERSTORM:
@@ -294,7 +297,7 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
                     command[1] = 0x04; //RED
                     break;
                 default:
-                    //TODO
+                    command[1] = 0x10; //WHITE
                     break;
             }
 
@@ -305,22 +308,21 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
                 command[2] = 0x02;
             }
 
-            String strTemp = Utility.formatTemperatureWithoutDegree(this, temp);
-            Log.d("park", "strTemp: " + strTemp);
-            // command[3] : 10's digit number
-            // command[4] : 1's digit number
-            int length = strTemp.length();
-            if (length == 1) {
-                command[3] = 0x00;
-                command[4] = (byte) (strTemp.charAt(0) - 0x30);
-            } else if (length == 2) {
-                command[3] = (byte) (strTemp.charAt(0) - 0x30);
-                command[4] = (byte) (strTemp.charAt(1) - 0x30);
-            } else {
-                command[3] = 0x09;
-                command[4] = 0x09;
+            maxTemp = (int) Math.round(temp);
+            if (maxTemp > 100) {
+                secondDigit = 0x09;
+                firstDigit = 0x09;
+            } else if (maxTemp < 100 && maxTemp > 9) {
+                int a = maxTemp / 10;
+                int b = maxTemp - (10 * a);
+                firstDigit = Utility.getDigit(a);
+                secondDigit = Utility.getDigit(b);
+            } else if (maxTemp < 10 && maxTemp > 0) {
+                firstDigit = 0x00;
+                secondDigit = Utility.getDigit(maxTemp);
             }
-
+            command[3] = firstDigit;    // 10's digit number.
+            command[4] = secondDigit;   // 1's digit number.
             command[5] = 0x7F;  // Use this value to end the command.
 
             tBlue.write(command);
@@ -339,4 +341,21 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         return btConnected;
     }
     // end of move
+
+/*
+            String strTemp = Utility.formatTemperatureWithoutDegree(this, temp);
+            // command[3] : 10's digit number
+            // command[4] : 1's digit number
+            int length = strTemp.length();
+            if (length == 1) {
+                command[3] = 0x00;
+                command[4] = (byte) (strTemp.charAt(0) - 0x30);
+            } else if (length == 2) {
+                command[3] = (byte) (strTemp.charAt(0) - 0x30);
+                command[4] = (byte) (strTemp.charAt(1) - 0x30);
+            } else {
+                command[3] = 0x09;
+                command[4] = 0x09;
+            }
+*/
 }
