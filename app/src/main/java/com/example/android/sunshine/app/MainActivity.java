@@ -24,7 +24,6 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -309,10 +308,10 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
             }
 
             maxTemp = (int) Math.round(temp);
-            if (maxTemp > 100) {
+            if (maxTemp > 98) {
                 secondDigit = 0x09;
                 firstDigit = 0x09;
-            } else if (maxTemp < 100 && maxTemp > 9) {
+            } else if (maxTemp < 99 && maxTemp > 9) {
                 int a = maxTemp / 10;
                 int b = maxTemp - (10 * a);
                 firstDigit = Utility.getDigit(a);
