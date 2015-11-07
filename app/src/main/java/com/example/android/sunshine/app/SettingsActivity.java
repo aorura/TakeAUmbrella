@@ -16,7 +16,9 @@
 package com.example.android.sunshine.app;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -26,7 +28,7 @@ import android.preference.PreferenceManager;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings.
- * <p>
+ * <p/>
  * See <a href="http://developer.android.com/design/patterns/settings.html">
  * Android Design: Settings</a> for design guidelines and the <a
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
@@ -34,6 +36,7 @@ import android.preference.PreferenceManager;
  */
 public class SettingsActivity extends PreferenceActivity
         implements Preference.OnPreferenceChangeListener {
+    final static String PREF_KEY = "pref_key";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,10 @@ public class SettingsActivity extends PreferenceActivity
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_units_key)));
         // dongwook2.shin
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_rainbow_key)));
+
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.putBoolean(PREF_KEY, true);
+        editor.commit();
     }
 
     /**

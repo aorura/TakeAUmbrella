@@ -21,8 +21,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -161,7 +163,9 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         }
 
         // change LED light when weather value is chagend
-        if (weather != null && weather != getString(R.string.pref_rainbow_default) && !weather.equals(mWeather)) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        Boolean isFromSetting = sharedPref.getBoolean(SettingsActivity.PREF_KEY, false);
+        if (weather != null && isFromSetting) {
             if (weather.equals(getString(R.string.pref_rainbow_sunny))) {
                 onSend(Utility.CLEAR, ForecastAdapter.TEMP);
             } else if (weather.equals(getString(R.string.pref_rainbow_cloud))) {
@@ -170,6 +174,9 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
                 //settings menu can be added. so I used else if statement.
                 onSend(Utility.RAIN, ForecastAdapter.TEMP);
             }
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(SettingsActivity.PREF_KEY, false);
+            editor.commit();
         }
     }
 
@@ -233,6 +240,7 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
     public void onDestroy() {
         if (tBlue != null) {
             tBlue.close();
+            tBlue = null;
         }
         this.unregisterReceiver(BTReceiver);
         super.onDestroy();
@@ -241,7 +249,9 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
     public void onStart() {
         super.onStart();
 
-        tBlue = new TBlue(this);
+        if (tBlue == null) {
+            tBlue = new TBlue(this);
+        }
     }
 
     public void onStop() {
