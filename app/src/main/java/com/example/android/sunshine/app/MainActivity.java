@@ -15,6 +15,8 @@
  */
 package com.example.android.sunshine.app;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -24,6 +26,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -41,6 +44,7 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
+    public static final int REQUEST_CODE = 0;
 
     private boolean mTwoPane;
     private String mLocation;
@@ -112,6 +116,7 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
                     @Override
                     public void run() {
                         onSend(Utility.getWeatherConditionForBT(ForecastAdapter.WEATHER), ForecastAdapter.TEMP);
+                        setRepeatingAlarm();
                         //Toast.makeText(getBaseContext(), "" + Utility.getWeatherConditionForBT(ForecastAdapter.WEATHER), Toast.LENGTH_LONG).show();
                         //Toast.makeText(getBaseContext(), ""+ForecastAdapter.WEATHER, Toast.LENGTH_LONG).show();
                     }
@@ -120,6 +125,19 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
         }, 5000);
     }
 
+    void setRepeatingAlarm() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, REQUEST_CODE, intent, 0);
+
+        int alarmType = AlarmManager.ELAPSED_REALTIME;
+        final int FIFTEEN_SEC_MILLIS = 15000;
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(alarmType, SystemClock.elapsedRealtime() + FIFTEEN_SEC_MILLIS, FIFTEEN_SEC_MILLIS, pendingIntent);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
