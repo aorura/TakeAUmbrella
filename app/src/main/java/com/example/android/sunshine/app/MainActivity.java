@@ -134,9 +134,9 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 
         int alarmType = AlarmManager.ELAPSED_REALTIME;
         final int FIFTEEN_SEC_MILLIS = 15000;
-
+        final int THREE_HOURS = 60 * 60 * 3 * 1000;
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setRepeating(alarmType, SystemClock.elapsedRealtime() + FIFTEEN_SEC_MILLIS, FIFTEEN_SEC_MILLIS, pendingIntent);
+        alarmManager.setRepeating(alarmType, SystemClock.elapsedRealtime() + FIFTEEN_SEC_MILLIS, THREE_HOURS, pendingIntent);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
