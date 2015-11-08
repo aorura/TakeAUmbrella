@@ -116,13 +116,13 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
                     @Override
                     public void run() {
                         onSend(Utility.getWeatherConditionForBT(ForecastAdapter.WEATHER), ForecastAdapter.TEMP);
-                        setRepeatingAlarm();
                         //Toast.makeText(getBaseContext(), "" + Utility.getWeatherConditionForBT(ForecastAdapter.WEATHER), Toast.LENGTH_LONG).show();
                         //Toast.makeText(getBaseContext(), ""+ForecastAdapter.WEATHER, Toast.LENGTH_LONG).show();
                     }
                 });
             }
         }, 5000);
+        setRepeatingAlarm();
     }
 
     void setRepeatingAlarm() {
@@ -132,11 +132,9 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, REQUEST_CODE, intent, 0);
 
-        int alarmType = AlarmManager.ELAPSED_REALTIME;
-        final int FIFTEEN_SEC_MILLIS = 15000;
-        final int THREE_HOURS = 60 * 60 * 3 * 1000;
+        int alarmType = AlarmManager.ELAPSED_REALTIME_WAKEUP;
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setRepeating(alarmType, SystemClock.elapsedRealtime() + FIFTEEN_SEC_MILLIS, THREE_HOURS, pendingIntent);
+        alarmManager.setRepeating(alarmType, SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HOUR, AlarmManager.INTERVAL_HOUR, pendingIntent);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
