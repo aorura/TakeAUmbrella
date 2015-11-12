@@ -54,7 +54,6 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
     //move from ComBlueTooth.java to MainActivity.java of sunshine
     // start of move
     static TBlue tBlue;
-    byte[] LED_COLOR = new byte[5];
     int idx = 0;
     // end of move
 
@@ -67,11 +66,6 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 
         //move from ComBlueTooth.java to MainActivity.java of sunshine
         // start of move
-        LED_COLOR[0] = 0x01;    // blue
-        LED_COLOR[1] = 0x02;    // Green
-        LED_COLOR[2] = 0x04;    // RED
-        LED_COLOR[3] = 0x08;    // YELLOW
-        LED_COLOR[4] = 0x10;    // WHITE
 
         IntentFilter filter1 = new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED);
         IntentFilter filter2 = new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
@@ -289,6 +283,12 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
     }
 
     public void onSend(int WeatherId, double temp) {
+        final byte BLUE = 0x01;
+        final byte GREEN = 0x02;
+        final byte RED = 0x04;
+        final byte YELLOW = 0x08;
+        final byte WHITE = 0x10;
+
         if (btConnected()) {
             Toast.makeText(this, "onSend", Toast.LENGTH_SHORT).show();
 
@@ -301,28 +301,28 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 
             switch (WeatherId) {
                 case Utility.THUNDERSTORM:
-                    command[1] = 0x01; //blue
+                    command[1] = RED;
                     break;
                 case Utility.DRIZZLE:
-                    command[1] = 0x08; //yellow
+                    command[1] = YELLOW;
                     break;
                 case Utility.RAIN:
-                    command[1] = 0x01; //blue
+                    command[1] = RED;
                     break;
                 case Utility.SNOW:
-                    command[1] = 0x10; //WHITE
+                    command[1] = WHITE;
                     break;
                 case Utility.ATMOSPHERE:
-                    command[1] = 0x08; //yellow
+                    command[1] = GREEN;
                     break;
                 case Utility.CLOUDS:
-                    command[1] = 0x02; //green
+                    command[1] = BLUE & WHITE;
                     break;
                 case Utility.CLEAR:
-                    command[1] = 0x04; //RED
+                    command[1] = WHITE;
                     break;
                 default:
-                    command[1] = 0x10; //WHITE
+                    command[1] = WHITE;
                     break;
             }
 
