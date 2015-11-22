@@ -100,6 +100,8 @@
     <string name="pref_rainbow_sunny">Sunny</string>
     <string name="pref_rainbow_rainy">Rainy</string>
     <string name="pref_rainbow_cloud">Cloud</string>
+    <string name="pref_rainbow_snow">Snow</string>
+    <string name="pref_rainbow_drizzle">Drizzle</string>
     <string name="pref_rainbow_key">Rainbow</string>
     <string name="pref_rainbow_default">None</string>
 

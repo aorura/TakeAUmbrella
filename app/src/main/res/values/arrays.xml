@@ -17,5 +17,7 @@
         <item>@string/pref_rainbow_sunny</item>
         <item>@string/pref_rainbow_rainy</item>
         <item>@string/pref_rainbow_cloud</item>
+        <item>@string/pref_rainbow_snow</item>
+        <item>@string/pref_rainbow_drizzle</item>
     </string-array>
 </resources>

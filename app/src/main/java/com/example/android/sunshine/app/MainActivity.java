@@ -183,6 +183,10 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
             } else if (weather.equals(getString(R.string.pref_rainbow_rainy))) {
                 //settings menu can be added. so I used else if statement.
                 onSend(Utility.RAIN, ForecastAdapter.TEMP);
+            } else if (weather.equals("Snow")) {
+                onSend(Utility.SNOW, ForecastAdapter.TEMP);
+            } else if (weather.equals("Drizzle")) {
+                onSend(Utility.DRIZZLE, ForecastAdapter.TEMP);
             }
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean(SettingsActivity.PREF_KEY, false);
@@ -301,22 +305,22 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 
             switch (WeatherId) {
                 case Utility.THUNDERSTORM:
-                    command[1] = RED;
+                    command[1] = RED | BLUE;
                     break;
                 case Utility.DRIZZLE:
                     command[1] = YELLOW;
                     break;
                 case Utility.RAIN:
-                    command[1] = RED;
+                    command[1] = BLUE;
                     break;
                 case Utility.SNOW:
-                    command[1] = WHITE;
+                    command[1] = RED | BLUE | GREEN;
                     break;
                 case Utility.ATMOSPHERE:
                     command[1] = GREEN;
                     break;
                 case Utility.CLOUDS:
-                    command[1] = BLUE & WHITE;
+                    command[1] = BLUE | WHITE;
                     break;
                 case Utility.CLEAR:
                     command[1] = WHITE;
